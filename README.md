@@ -11,7 +11,9 @@ OpenCode 会话优化工具箱，旨在解除 GPT 的限制并提升使用体验
 
 ## 安装
 
-您可以直接运行脚本，或者安装本工具：
+### 1. 安装 Patcher (Python)
+
+您可以直接通过 pip 安装：
 
 ```bash
 git clone git@github.com:zhexulong/opencode-gpt-unlocked.git
@@ -20,6 +22,20 @@ pip install -e .
 ```
 
 安装后，可以直接在终端使用 `opencode-patcher` 命令。
+
+### 2. 安装 Plugin (实时拦截)
+
+将插件脚本添加至 OpenCode 配置文件 `~/.config/opencode/opencode.json` (Linux) 或 `%APPDATA%\opencode\opencode.json` (Windows) 中：
+
+```json
+{
+  "plugin": [
+    "/absolute/path/to/opencode-gpt-unlocked/refusal-patcher.ts"
+  ]
+}
+```
+
+> **Note**: 请将 `/absolute/path/to/` 替换为您克隆仓库后的实际绝对路径。
 
 ## 功能 (Patcher)
 
