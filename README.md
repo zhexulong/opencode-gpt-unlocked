@@ -1,8 +1,27 @@
-# OpenCode Session Patcher
+# opencode-gpt-unlocked
 
-一个独立的本地 Python 工具，用于重写 OpenCode 的 SQLite 会话数据，清理拒绝回复并移除 reasoning 分片。
+OpenCode 会话优化工具箱，旨在解除 GPT 的限制并提升使用体验。
 
-## 功能
+## 组件
+
+- **OpenCode Patcher**: 一个 Python 脚本，通过修改 `opencode.db` 的方式实现：
+    - 自动检测并移除 Assistant 的拒绝回答（Refusals）。
+    - 清理 Reasoning（推理内容），防止推理链中断导致的模型异常。
+- **Message Editor Plugin (WIP)**: 计划中的在线插件，支持在 UI 中直接编辑消息。
+
+## 安装
+
+您可以直接运行脚本，或者安装本工具：
+
+```bash
+git clone git@github.com:zhexulong/opencode-gpt-unlocked.git
+cd opencode-gpt-unlocked
+pip install -e .
+```
+
+安装后，可以直接在终端使用 `opencode-patcher` 命令。
+
+## 功能 (Patcher)
 
 - 自动定位 OpenCode 数据库（默认从 XDG data 路径推断）
 - 支持按最新会话、交互选择、日期、会话 ID 进行定位
@@ -12,29 +31,26 @@
 - 修改前自动创建 .bak 备份
 - 支持 dry-run 预览
 
-## 快速开始
+## 使用方法
 
 ```bash
-# 直接运行（自动定位 DB）
-python opencode_patcher.py
+# 安装后直接运行
+opencode-patcher
 
 # 交互选择会话
-python opencode_patcher.py --select
+opencode-patcher --select
 
 # 指定日期会话
-python opencode_patcher.py --date 2026-03-25
+opencode-patcher --date 2026-03-25
 
 # 指定会话 ID
-python opencode_patcher.py --session-id <session_id>
-
-# 指定数据库文件
-python opencode_patcher.py --db-file ~/.local/share/opencode/opencode.db
+opencode-patcher --session-id <session_id>
 
 # 预览模式
-python opencode_patcher.py --dry-run --show-content
+opencode-patcher --dry-run --show-content
 
 # 执行后直接进入该会话
-python opencode_patcher.py --auto-resume
+opencode-patcher --auto-resume
 ```
 
 ## 参数
