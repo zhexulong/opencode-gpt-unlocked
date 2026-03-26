@@ -1,31 +1,49 @@
 # opencode-gpt-unlocked
 
-OpenCode 会话优化工具箱，旨在解除 GPT 的限制并提升使用体验。
+OpenCode 会话优化工具箱。本工具箱提供了两种不同实现技术（数据库修补 vs. 实时拦截）来移除 Assistant 的拒绝回答及清理推理链，通过绕过安全限制和移除 Reasoning 块来提升 GPT 类模型的使用体验。
 
-## 组件
+## 选择适合您的工具
 
-- **OpenCode Patcher**: 一个 Python 脚本，通过修改 `opencode.db` 的方式实现：
-    - 自动检测并移除 Assistant 的拒绝回答（Refusals）。
-    - 清理 Reasoning（推理内容），防止推理链中断导致的模型异常。
-- **Message Editor Plugin (WIP)**: 计划中的在线插件，支持在 UI 中直接编辑消息。
+| 特性 | **OpenCode Patcher** (推荐) | **Refusal Patcher Plugin** |
+| :--- | :--- | :--- |
+| **工作原理** | 直接修改 `opencode.db` 本地数据库 | 实时拦截并处理 API 交互 |
+| **使用场景** | **修复已产生的拒绝报错** | **在对话生成时实时干预** |
+| **主要优势** | 稳定、零配置(自动搜库)、支持批量处理 | 自动化程度高、无需手动执行命令 |
+| **依赖项** | Python 3 | Gemini API Key (用于判定拒绝) |
+| **适用人群** | 希望快速修复现有会话或偶尔使用的用户 | 希望在对话过程中实时获得无阻碍体验的用户 |
 
-## 安装
+---
 
-### 1. 安装 Patcher (Python)
+## 1. OpenCode Patcher (数据库修复工具)
 
-您可以直接通过 pip 安装：
+这是最推荐的使用方式。它能直接修复由于 Reasoning 导致模型“卡死”或显示“拒绝回答”的现有会话。
+
+### 安装与运行
 
 ```bash
 git clone git@github.com:zhexulong/opencode-gpt-unlocked.git
 cd opencode-gpt-unlocked
 pip install -e .
+
+# 运行（会自动查找最新会话并修复）
+opencode-patcher
 ```
 
-安装后，可以直接在终端使用 `opencode-patcher` 命令。
+### 核心功能
+- **一键脱敏**: 自动检测并替换最后一条拒绝消息为“确认协助”的占位符。
+- **推理清理**: 删除所有 `reasoning` 分片，防止模型因推理链异常而中断。
+- **自动备份**: 修改前自动创建 `.bak` 备份文件，确保数据安全。
+- **交互模式**: 使用 `opencode-patcher --select` 手动挑选需要修复的会话。
 
-### 2. 安装 Plugin (实时拦截)
+---
 
-将插件脚本添加至 OpenCode 配置文件 `~/.config/opencode/opencode.json` (Linux) 或 `%APPDATA%\opencode\opencode.json` (Windows) 中：
+## 2. Refusal Patcher Plugin (实时拦截插件)
+
+该插件通过 OpenCode 的插件系统运行，在模型回复时动态判定是否包含拒绝内容。
+
+### 配置
+
+编辑 `~/.config/opencode/opencode.json` (Linux) 或 `%APPDATA%\opencode\opencode.json` (Windows)：
 
 ```jsonc
 {
@@ -48,10 +66,15 @@ pip install -e .
   }
 }
 ```
-
 > **Note**: 请将 `/absolute/path/to/` 替换为您克隆仓库后的实际绝对路径。配置文件支持标准 JSON 或带注释的 JSONC 格式。
 
-## 功能 (Patcher)
+### 核心功能
+- **实时干预**: 模型输出后立即触发关键词检测与 Gemini 二次判定。
+- **自动改写**: 确认为拒绝后，自动清空后台数据库中的推理块，并重写 UI 文本。
+
+---
+
+## 常用参数 (Patcher)
 
 - 自动定位 OpenCode 数据库（默认从 XDG data 路径推断）
 - 支持按最新会话、交互选择、日期、会话 ID 进行定位
