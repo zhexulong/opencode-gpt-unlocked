@@ -39,16 +39,18 @@ opencode-patcher
 
 ## 2. Refusal Patcher Plugin (实时拦截插件)
 
-该插件通过 OpenCode 的插件系统运行，在模型回复时动态判定是否包含拒绝内容。
+该插件通过 OpenCode 的插件加载系统运行，在模型生成回复时实时拦截拒绝内容，并可选择使用固定占位符或 AI 动态改写内容。
 
-### 配置
+### 安装方法
+
+只需将插件包名添加到您的 OpenCode 配置文件中，OpenCode 启动时会自动从 NPM 下载并安装（建议使用 `@latest` 标签以保持版本更新）。
 
 编辑 `~/.config/opencode/opencode.json` (Linux) 或 `%APPDATA%\opencode\opencode.json` (Windows)：
 
 ```jsonc
 {
   "plugin": [
-    "/absolute/path/to/opencode-gpt-unlocked/refusal-patcher.ts"
+    "opencode-gpt-unlocked@latest" 
   ],
   "experimental": {
     "refusal_patcher": {
@@ -66,11 +68,24 @@ opencode-patcher
   }
 }
 ```
+
+#### B. 开发者模式 (File Path)
+直接引用脚本文件的绝对路径：
+
+```jsonc
+{
+  "plugin": [
+    "/absolute/path/to/opencode-gpt-unlocked/refusal-patcher.ts"
+  ]
+}
+```
+
 > **Note**: 请将 `/absolute/path/to/` 替换为您克隆仓库后的实际绝对路径。配置文件支持标准 JSON 或带注释的 JSONC 格式。
 
 ### 核心功能
 - **实时干预**: 模型输出后立即触发关键词检测与 AI 二次判定。
-- **自动改写/修复**: 确认为拒绝后，自动清空后台数据库中的推理块，并使用占位符或 **AI 自动改写（AI Rewrite）** 修复 UI 文本。
+- **动态改写**: 确认为拒绝后，可选择使用固定占位符或**调用 AI 自动改写（AI Rewrite）**。
+- **自动清理**: 确认为拒绝时，自动清空后台数据库中的推理块（Reasoning Part），防止后续对话报错。
 
 ---
 

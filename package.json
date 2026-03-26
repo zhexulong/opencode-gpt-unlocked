@@ -1,0 +1,28 @@
+{
+  "name": "opencode-gpt-unlocked",
+  "version": "1.0.0",
+  "description": "OpenCode 会话优化工具箱 - 移除拒绝回答及清理推理链",
+  "main": "dist/refusal-patcher.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun build refusal-patcher.ts --outfile dist/refusal-patcher.js --target bun --format esm",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "gpt",
+    "unlocked",
+    "patcher"
+  ],
+  "author": "zhexulong",
+  "license": "MIT",
+  "devDependencies": {
+    "@opencode-ai/plugin": "latest",
+    "bun-types": "latest",
+    "typescript": "latest"
+  }
+}
